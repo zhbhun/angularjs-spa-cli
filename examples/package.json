@@ -1,0 +1,24 @@
+{
+  "name": "examples",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "dll:development": "cross-env NODE_ENV=development node ./node_modules/angularjs-cli/scripts/dll --config ./config/development.js",
+    "dll:production": "cross-env NODE_ENV=production node ./node_modules/angularjs-cli/scripts/dll --config ./config/production.js",
+    "dll": "npm run dll:development && npm run dll:production",
+    "start": "node ./node_modules/angularjs-cli/scripts/start --config ./config/development.js",
+    "build": "node ./node_modules/angularjs-cli/scripts/build --config ./config/production.js"
+  },
+  "dependencies": {
+    "jquery": "^3.2.0",
+    "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "angularjs-cli": "file:../",
+    "cross-env": "3.2.4"
+  }
+}

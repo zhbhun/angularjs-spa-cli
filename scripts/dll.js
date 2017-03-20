@@ -1,6 +1,12 @@
+var argv = require('yargs').argv;
+if (argv.p) {
+  process.env.NODE_ENV = 'production';
+} else {
+  process.env.NODE_ENV = 'development';
+}
+
 var fs = require('fs');
 var path = require('path');
-var argv = require('yargs').argv;
 
 var printErrors = require('../utils/printErrors');
 var configProcess = require('../utils/configProcess');

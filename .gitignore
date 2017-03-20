@@ -48,5 +48,6 @@ Temporary Items
 .dll
 .vscode
 dist
+watch
 npm-debug.log
 yarn-error.log

@@ -1,9 +1,9 @@
 var path = require('path');
-var merge = require('webpack-merge');
 var webpack = require('webpack');
+var merge = require('webpack-merge');
+var AssetsPlugin = require('assets-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-var names = require('./names').dll;
 var WebpackConfig = require('./webpack.config');
 
 function WebpackDevDllConfig(config, index) {
@@ -17,21 +17,26 @@ function WebpackDevDllConfig(config, index) {
     },
     output: {
       path: config.output.dll,
-      filename: names.js,
-      chunkFilename: names.js,
-      library: names.library,
     },
     plugins: [
-      new ExtractTextPlugin({ filename: names.css }),
+      new ExtractTextPlugin({ filename: config.filenames.css }),
       new webpack.DllPlugin({
         context: config.context,
-        name: names.library,
-        path: path.resolve(config.output.dll, names.manifest),
+        name: config.filenames.library,
+        path: path.resolve(config.output.dll, config.filenames.manifest),
+      }),
+      new AssetsPlugin({
+        filename: 'assets.json', // TODO
+        fullPath: false,
+        includeManifest: false,
+        path: config.output.dll,
+        prettyPrint: true,
+        update: true,
       }),
     ].concat(previousChunks.map(function (chunk) {
       return new webpack.DllReferencePlugin({
         context: config.context,
-        manifest: require(config.output.dll + '/' + names.manifest.replace('[name]', chunk.name)),
+        manifest: require(config.output.dll + '/' + config.filenames.manifest.replace('[name]', chunk.name)),
       });
     })),
   });

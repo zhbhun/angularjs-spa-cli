@@ -3,34 +3,32 @@ var path = require('path');
 var merge = require('webpack-merge');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 
-var names = require('./names').production;
 var WebpackConfig = require('./webpack.config');
 
 function WebpackDevConfig(config) {
+  var dll = config.output.dll;
+  var assets = require(path.resolve(dll, 'assets.json'));
   var publicPath = config.output.publicPath;
   var plugins = [];
   config.chunks.map(function (chunk) {
-    var dll = config.output.dll;
-    var manifest = path.resolve(dll, names.manifest.replace('[name]', chunk.name));
-    var js = path.resolve(dll, chunk.name + '.js');
-    var css = path.resolve(dll, chunk.name + '.css');
     plugins.push(new webpack.DllReferencePlugin({
       context: config.context,
-      manifest: require(manifest),
+      manifest: require(path.resolve(dll, config.filenames.manifest.replace('[name]', chunk.name))),
     }));
     plugins.push(new AddAssetHtmlPlugin({
-      filepath: js,
-      includeSourcemap: true,
+      filepath: path.resolve(dll, assets[chunk.name].js),
+      includeSourcemap: false,
       publicPath: publicPath,
       typeOfAsset: 'js',
     }));
-    if (fs.existsSync(css)) {
+    if (assets[chunk.name].css) {
       plugins.push(new AddAssetHtmlPlugin({
-        filepath: css,
-        includeSourcemap: true,
+        filepath: path.resolve(dll, assets[chunk.name].css),
+        includeSourcemap: false,
         publicPath: publicPath,
         typeOfAsset: 'css',
       }));
@@ -41,13 +39,10 @@ function WebpackDevConfig(config) {
       config.input.script,
     ],
     output: {
-      path: config.output.buildPath,
-      publicPath: publicPath,
-      filename: names.js,
-      chunkFilename: names.js,
+      path: config.output.build,
     },
     plugins: [
-      new ExtractTextPlugin({ filename: names.css }),
+      new ExtractTextPlugin({ filename: config.filenames.css }),
       new HtmlWebpackPlugin({
         inject: true,
         chunksSortMode: 'dependency',
@@ -65,6 +60,14 @@ function WebpackDevConfig(config) {
           // minifyURLs: true,
         },
       }),
+      new CopyWebpackPlugin([{
+        from: config.output.dll,
+        to: config.output.build,
+        ignore: [
+          '*.json',
+          '*.map',
+        ],
+      }]),
     ].concat(plugins),
   });
 }

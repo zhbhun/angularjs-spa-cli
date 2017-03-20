@@ -1,32 +1,44 @@
 {
   "name": "angularjs-spa-cli",
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "description": "Create Angularjs SPA with no build configuration.",
+  "author": "zhbhun",
+  "repository": "https://github.com/zhbhun/angularjs-spa-cli",
+  "license": "MIT",
+  "engines": {
+    "node": ">=4"
+  },
+  "bugs": {
+    "url": "https://github.com/zhbhun/angularjs-spa-cli/issues"
+  },
   "keywords": [
     "angularjs",
     "webpack",
     "spa"
   ],
-  "description": "Create Angularjs SPA with no build configuration.",
-  "license": "MIT",
-  "engines": {
-    "node": ">=4"
-  },
   "files": [
+    "bin",
     "config",
     "scripts",
     "utils"
   ],
+  "bin": {
+    "ng": "./bin/angularjs-spa-cli.js"
+  },
   "dependencies": {
     "add-asset-html-webpack-plugin": "1.0.2",
+    "assets-webpack-plugin": "3.5.1",
     "autoprefixer": "6.7.6",
     "babel-core": "6.23.1",
     "babel-loader": "6.4.0",
-    "babel-preset-es2015": "6.22.0",
     "chalk": "1.1.3",
     "case-sensitive-paths-webpack-plugin": "1.1.4",
     "connect-history-api-fallback": "1.3.0",
+    "copy-webpack-plugin": "4.0.1",
+    "cross-spawn": "5.1.0",
     "css-loader": "0.26.2",
     "detect-port": "1.1.0",
+    "eslint-loader": "1.6.3",
     "extract-text-webpack-plugin": "2.1.0",
     "file-loader": "0.10.1",
     "html-loader": "0.4.5",
@@ -43,5 +55,8 @@
     "webpack": "2.2.1",
     "webpack-dev-server": "2.4.1",
     "webpack-merge": "4.0.0"
+  },
+  "peerDependencies": {
+    "eslint": "^3.8.1"
   }
 }

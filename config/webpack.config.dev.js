@@ -6,7 +6,6 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 
-var names = require('./names').development;
 var WebpackConfig = require('./webpack.config');
 
 function WebpackDevConfig(config) {
@@ -14,7 +13,7 @@ function WebpackDevConfig(config) {
   var plugins = [];
   config.chunks.map(function (chunk) {
     var dll = config.output.dll;
-    var manifest = path.resolve(dll, names.manifest.replace('[name]', chunk.name));
+    var manifest = path.resolve(dll, config.filenames.manifest.replace('[name]', chunk.name));
     var js = path.resolve(dll, chunk.name + '.js');
     var css = path.resolve(dll, chunk.name + '.css');
     plugins.push(new webpack.DllReferencePlugin({
@@ -45,9 +44,6 @@ function WebpackDevConfig(config) {
     ],
     output: {
       path: __dirname,
-      publicPath: publicPath,
-      filename: names.js,
-      chunkFilename: names.js,
     },
     plugins: [
       new webpack.HotModuleReplacementPlugin(),

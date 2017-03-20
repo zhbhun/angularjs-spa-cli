@@ -1,3 +1,4 @@
+require('./vendor');
 require('./index.css');
 
 document.body.innerHTML =

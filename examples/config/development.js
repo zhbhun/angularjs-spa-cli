@@ -8,7 +8,7 @@ module.exports = {
     html: 'src/index.html',
   },
   output: {
-    dll: '.dll',
+    dll: '.dll/development',
     build: 'dist',
     public: '/',
   },
@@ -19,8 +19,7 @@ module.exports = {
   chunks: [{
     name: 'dev',
     dependencies: [
-      'jquery',
-      'lodash',
+      path.resolve(__dirname, '../src/vendor.js'),
     ],
   }],
 };

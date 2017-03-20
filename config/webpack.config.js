@@ -5,10 +5,8 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 
-var names = require('./names');
 var getClientEnvironment = require('./env');
 
-var env = getClientEnvironment('/');
 var cssLoaders = [
   {
     loader: 'css-loader',
@@ -38,11 +36,16 @@ var cssLoaders = [
 var sassLoaders = cssLoaders.concat('sass-loader');
 
 function WebpackConfig(config){
+  var env = getClientEnvironment(config.output.publicPath);
   var production = env.raw.NODE_ENV === 'production';
   return {
     cache: true,
     output: {
       pathinfo: true,
+      publicPath: config.output.publicPath,
+      filename: config.filenames.js,
+      chunkFilename: config.filenames.js,
+      library: config.filenames.library,
     },
     resolve: {
       alias: {
@@ -55,12 +58,12 @@ function WebpackConfig(config){
     },
     module: {
       rules: [
-        // {
-        //   enforce: 'pre',
-        //   test: /\.js$/,
-        //   exclude: /node_modules/,
-        //   use: 'eslint-loader',
-        // },
+        {
+          enforce: 'pre',
+          test: /\.js$/,
+          exclude: /node_modules/,
+          use: 'eslint-loader',
+        },
         {
           exclude: [
             /\.html$/,
@@ -91,12 +94,7 @@ function WebpackConfig(config){
         {
           test: /\.js$/,
           exclude: /node_modules/,
-          use: [{
-            loader: 'babel-loader',
-            options: {
-              presets: ['es2015'],
-            },
-          }],
+          use: 'babel-loader',
         },
         {
           test: /\.css$/,
@@ -104,15 +102,23 @@ function WebpackConfig(config){
             fallback: 'style-loader',
             use: cssLoaders,
           }),
-          // use: ['style-loader'].concat(cssLoaders),
         },
-        // {
-        //   test: /\.scss$/,
-        //   use: ExtractTextPlugin.extract({
-        //     fallback: 'style-loader',
-        //     use: sassLoaders,
-        //   }),
-        // },
+        {
+          test: /\.scss$/,
+          use: ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            use: sassLoaders,
+          }),
+        },
+        {
+          test: /\.svg$/,
+          use: [{
+            loader: 'file-loader',
+            options: {
+              name: '[name]-[hash].[ext]',
+            },
+          }],
+        },
       ],
     },
     plugins: [

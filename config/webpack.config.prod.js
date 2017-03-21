@@ -10,14 +10,16 @@ var AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 var WebpackConfig = require('./webpack.config');
 
 function WebpackDevConfig(config) {
-  var dll = config.output.dll;
-  var assets = require(path.resolve(dll, 'assets.json'));
   var publicPath = config.output.publicPath;
   var plugins = [];
   config.chunks.map(function (chunk) {
+    var dll = config.output.dll;
+    var assets = require(path.resolve(dll, 'assets.json'));
+    var manifest = config.filenames.manifest.replace('[name]', chunk.name);
+    var manifestPath = path.resolve(dll, manifest);
     plugins.push(new webpack.DllReferencePlugin({
       context: config.context,
-      manifest: require(path.resolve(dll, config.filenames.manifest.replace('[name]', chunk.name))),
+      manifest: require(manifestPath),
     }));
     plugins.push(new AddAssetHtmlPlugin({
       filepath: path.resolve(dll, assets[chunk.name].js),

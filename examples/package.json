@@ -7,12 +7,11 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "predll": "rimraf ./.dll",
-    "dll:development": "ng dll --config ./config/development.js",
-    "dll:production": "ng dll --config ./config/production.js -p",
-    "dll": "npm run dll:development && npm run dll:production",
+    "prestart": "rimraf ./.dll/development && ng dll --config ./config/development.js",
     "start": "ng start --config ./config/development.js",
-    "prebuild": "rimraf ./dist",
+    "preproxy": "rimraf ./.dll/nproxy && ng dll --config ./config/nproxy.js",
+    "proxy": "ng start --config ./config/nproxy.js",
+    "prebuild": "rimraf ./.dll/production && rimraf ./dist && ng dll --config ./config/production.js -p",
     "build": "ng build --config ./config/production.js",
     "prewatch": "rimraf ./watch",
     "watch": "ng webpack --config ./config/webpack.config.js"

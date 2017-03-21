@@ -1,12 +1,12 @@
 {
   "name": "angularjs-spa-cli",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Create Angularjs SPA with no build configuration.",
   "author": "zhbhun",
   "repository": "https://github.com/zhbhun/angularjs-spa-cli",
   "license": "MIT",
   "engines": {
-    "node": ">=4"
+    "node": ">=6"
   },
   "bugs": {
     "url": "https://github.com/zhbhun/angularjs-spa-cli/issues"

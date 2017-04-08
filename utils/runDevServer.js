@@ -62,6 +62,7 @@ function runDevServer(config) {
     },
   }, config.server.original));
 
+  /*
   if (proxy) {
     applyProxyModdileware(devServer, proxy);
   }
@@ -74,6 +75,7 @@ function runDevServer(config) {
       "networks": false,
     });
   }
+  */
 
   devServer.listen(port, (err, result) => {
     if (err) {

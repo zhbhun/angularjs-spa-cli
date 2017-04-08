@@ -33,6 +33,9 @@ function configProcess(config) {
   var output = Object.assign({}, paths.output, config && config.output);
   var server = Object.assign({}, paths.server, config && config.server);
   var filenames = Object.assign({}, names[process.env.NODE_ENV], config && config.names);
+  var realServer = (server.protocol ? + '://' : '//')
+    + server.host
+    + (server.port ? (':' + server.port) : '');
   return Object.assign(config, {
     context: context,
     input: {
@@ -43,7 +46,8 @@ function configProcess(config) {
     output: {
       dll: path.resolve(context, output.dll),
       build: path.resolve(context, output.build),
-      publicPath: 'http://' + server.host + ':' + server.port + output.public,
+      publicUrl: realServer + '/',
+      publicPath: (server.proxy ? server.proxy : realServer) + output.public,
     },
     server: server,
     filenames: filenames,

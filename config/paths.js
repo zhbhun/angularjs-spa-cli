@@ -14,8 +14,9 @@ module.exports = {
     public: '/',
   },
   server: {
+    protocol: 'http',
     host: 'localhost',
-    port: '8080',
+    port: '3000',
     proxy: undefined,
     nproxy: undefined,
   },

@@ -11,7 +11,7 @@ var WebpackConfig = require('./webpack.config');
 
 function WebpackDevConfig(config) {
   var publicPath = config.output.publicPath;
-  var publicUrl = parse(publicPath).origin + '/';
+  var publicUrl = config.output.publicUrl;
   var plugins = [];
   config.chunks.map(function (chunk) {
     var dll = config.output.dll;

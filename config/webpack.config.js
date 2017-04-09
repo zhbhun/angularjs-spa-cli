@@ -7,37 +7,38 @@ var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 
 var getClientEnvironment = require('./env');
 
-var cssLoaders = [
-  {
-    loader: 'css-loader',
-    options: {
-      importLoaders: 1
-    }
-  }, {
-    loader: 'postcss-loader',
-    options: {
-      ident: 'postcss', // https://webpack.js.org/guides/migrating/#complex-options
-      plugins: function () {
-        return [
-          // stylelint(),
-          autoprefixer({
-            browsers: [
-              '>1%',
-              'last 4 versions',
-              'Firefox ESR',
-              'not ie < 9', // doesn't support IE8 anyway
-            ]
-          })
-        ]
-      }
-    }
-  }
-];
-var sassLoaders = cssLoaders.concat('sass-loader');
-
 function WebpackConfig(config){
   var env = getClientEnvironment(config.output.publicPath);
   var production = env.raw.NODE_ENV === 'production';
+  var cssLoaders = [
+    {
+      loader: 'css-loader',
+      options: {
+        importLoaders: 1,
+        minimize: production,
+        sourceMap: !production,
+      }
+    }, {
+      loader: 'postcss-loader',
+      options: {
+        ident: 'postcss', // https://webpack.js.org/guides/migrating/#complex-options
+        plugins: function () {
+          return [
+            // stylelint(),
+            autoprefixer({
+              browsers: [
+                '>1%',
+                'last 4 versions',
+                'Firefox ESR',
+                'not ie < 9', // doesn't support IE8 anyway
+              ]
+            })
+          ]
+        }
+      }
+    }
+  ];
+  var sassLoaders = cssLoaders.concat('sass-loader');
   return {
     cache: true,
     output: {
@@ -128,9 +129,14 @@ function WebpackConfig(config){
       new webpack.NoEmitOnErrorsPlugin(),
     ].concat(production ? [
       new webpack.optimize.UglifyJsPlugin({
+        beautify: false,
+        comments: false,
         compress: {
           screw_ie8: true, // doesn't support IE8
           warnings: false,
+          drop_console: true,
+          collapse_vars: true,
+          reduce_vars: true,
         },
         mangle: {
           screw_ie8: true,

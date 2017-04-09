@@ -29,6 +29,9 @@
     name: string, // chunk 名称
     dependencies: string[], // chunk 依赖
   }],
+  webpack: {
+    // original webpack config
+  },
 }
 ```
 

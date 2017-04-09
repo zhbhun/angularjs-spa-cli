@@ -1,5 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
+var merge = require('webpack-merge');
 var autoprefixer = require('autoprefixer');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var ProgressBarPlugin = require('progress-bar-webpack-plugin');
@@ -39,7 +40,7 @@ function WebpackConfig(config){
     }
   ];
   var sassLoaders = cssLoaders.concat('sass-loader');
-  return {
+  return merge({
     cache: true,
     output: {
       pathinfo: true,
@@ -152,7 +153,7 @@ function WebpackConfig(config){
       net: 'empty',
       tls: 'empty'
     },
-  };
+  }, config.webpack || {});
 }
 
 module.exports = WebpackConfig;

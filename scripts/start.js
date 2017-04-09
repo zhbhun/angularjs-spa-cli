@@ -6,7 +6,6 @@ var path = require('path');
 var argv = require('yargs').argv;
 
 var configProcess = require('../utils/configProcess');
-var setupCompiler = require('../utils/setupCompiler');
 var runDevServer = require('../utils/runDevServer');
 
 var context = fs.realpathSync(process.cwd());

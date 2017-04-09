@@ -33,7 +33,7 @@ function configProcess(config) {
   var output = Object.assign({}, paths.output, config && config.output);
   var server = Object.assign({}, paths.server, config && config.server);
   var filenames = Object.assign({}, names[process.env.NODE_ENV], config && config.names);
-  var realServer = (server.protocol ? + '://' : '//')
+  var realServer = (server.protocol ? (server.protocol + '://') : '//')
     + server.host
     + (server.port ? (':' + server.port) : '');
   return Object.assign(config, {
@@ -52,6 +52,6 @@ function configProcess(config) {
     server: server,
     filenames: filenames,
   });
-};
+}
 
 module.exports = configProcess;

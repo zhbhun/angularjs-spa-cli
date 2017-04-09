@@ -16,7 +16,7 @@ var isInteractive = process.stdout.isTTY;
 
 function runDevServer(config) {
   var server = config.server;
-  var protocol = 'http';
+  var protocol = server.protocol;
   var host = server.host;
   var port = server.port;
   var proxy = server.proxy;

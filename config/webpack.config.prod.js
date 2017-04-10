@@ -71,7 +71,7 @@ function WebpackDevConfig(config) {
         ],
       }]),
     ].concat(plugins),
-  });
+  }, config.webpack || {});
 }
 
 module.exports = WebpackDevConfig;

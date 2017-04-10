@@ -56,7 +56,7 @@ function WebpackDevConfig(config) {
         template: config.input.html,
       }),
     ].concat(plugins),
-  });
+  }, config.webpack || {});
 }
 
 module.exports = WebpackDevConfig;

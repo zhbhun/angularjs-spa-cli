@@ -40,7 +40,7 @@ function WebpackDevDllConfig(config, index) {
         manifest: require(config.output.dll + '/' + config.filenames.manifest.replace('[name]', chunk.name)),
       });
     })),
-  });
+  }, config.webpack || {});
 }
 
 module.exports = WebpackDevDllConfig;

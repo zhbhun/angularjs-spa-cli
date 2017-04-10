@@ -17,6 +17,7 @@ function WebpackDevDllConfig(config, index) {
     },
     output: {
       path: config.output.dll,
+      library: config.filenames.library,
     },
     plugins: [
       new ExtractTextPlugin({ filename: config.filenames.css }),

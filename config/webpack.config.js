@@ -47,7 +47,6 @@ function WebpackConfig(config){
       publicPath: config.output.publicPath,
       filename: config.filenames.js,
       chunkFilename: config.filenames.js,
-      library: config.filenames.library,
     },
     resolve: {
       alias: {

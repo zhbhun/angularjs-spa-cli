@@ -6,10 +6,15 @@ var path = require('path');
 var argv = require('yargs').argv;
 
 var configProcess = require('../utils/configProcess');
+var buildDll = require('../utils/buildDll');
 var runDevServer = require('../utils/runDevServer');
 
 var context = fs.realpathSync(process.cwd());
 var config = require(path.resolve(context, argv.config));
 config = configProcess(config);
 
-runDevServer(config);
+
+buildDll(config, function () {
+  runDevServer(config);
+});
+

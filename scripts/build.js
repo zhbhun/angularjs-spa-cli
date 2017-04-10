@@ -40,8 +40,8 @@ function buildProduction() {
   });
 }
 
-buildDll(config, function () {
-  rimraf(config.output.build, function () {
+rimraf(config.output.build, function () {
+  buildDll(config, function () {
     buildProduction();
   });
 });

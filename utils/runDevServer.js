@@ -3,6 +3,7 @@ var chalk = require('chalk');
 var nproxy = require('nproxy');
 var parse = require('url-parse');
 var express = require('express');
+var proxy = require('http-proxy-middleware');
 var WebpackDevServer = require('webpack-dev-server');
 
 var WebpackDevConfig = require('../config/webpack.config.dev');
@@ -19,10 +20,9 @@ function runDevServer(config) {
   var protocol = server.protocol;
   var host = server.host;
   var port = server.port;
-  var proxy = server.proxy;
   var publicPath = parse(config.output.publicPath);
   var webpackConfig = WebpackDevConfig(config);
-  compiler = setupCompiler(webpackConfig, {
+  var compiler = setupCompiler(webpackConfig, {
     host: host,
     port: port,
     protocol: protocol,
@@ -42,7 +42,7 @@ function runDevServer(config) {
       ignored: /node_modules/
     },
     publicPath: config.output.publicPath,
-    https: protocol === "https",
+    https: protocol === 'https',
     headers: {
       // fix CORS policy
       'Access-Control-Allow-Origin': '*',
@@ -52,6 +52,16 @@ function runDevServer(config) {
     overlay: true,
     historyApiFallback: false,
     setup: function (app) {
+      // fix client proxy to webpack dev server not work problem
+      // webpack dev server could not recognize wrong host
+      app.use(proxy(function (pathname, req) {
+        var parsedUrl = parse(req.url);
+        // TODO perfect rule
+        if (parsedUrl.origin != 'null') {
+          return true;
+        }
+        return false;
+      }, { target: config.output.publicUrl }));
       // server dll assets
       app.use(publicPath.pathname, express.static(config.output.dll, {
         setHeaders: function (res) {
@@ -63,8 +73,8 @@ function runDevServer(config) {
   }, config.server.original));
 
   /*
-  if (proxy) {
-    applyProxyModdileware(devServer, proxy);
+  if (server.proxy) {
+    applyProxyModdileware(devServer, server.proxy);
   }
 
   if (server.nproxy) {
@@ -77,9 +87,10 @@ function runDevServer(config) {
   }
   */
 
-  devServer.listen(port, (err, result) => {
+  devServer.listen(port, function (err, result) {
     if (err) {
-      return console.log(err);
+      console.log(err);
+      return;
     }
 
     if (isInteractive) {

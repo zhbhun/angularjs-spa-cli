@@ -46,8 +46,9 @@ function configProcess(config) {
     output: {
       dll: path.resolve(context, output.dll),
       build: path.resolve(context, output.build),
-      publicUrl: realServer + '/',
-      publicPath: (server.proxy ? server.proxy : realServer) + output.public,
+      public: output.public, // absolute path
+      publicUrl: realServer + '/', // server url
+      publicPath: realServer + output.public, // server url + absolute path
     },
     server: server,
     filenames: filenames,

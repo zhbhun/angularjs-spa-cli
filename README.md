@@ -22,13 +22,22 @@
     host: string, // 服务器地址
     port: string, // 服务器端口
     proxy: string, // 请求转发地址
-    nproxy: string, // 代理规则配置路径，参考 [nproxy](https://github.com/goddyZhao/nproxy)
     original: object, // webpack dev serve config
   },
   chunks: [{
     name: string, // chunk 名称
     dependencies: string[], // chunk 依赖
   }],
+  options: { // TODO advanced config
+    'eslint-loader': object,
+    'css-loader': object,
+    'postcss-loader': object,
+    'file-loader': object,
+    'html-loader': object,
+    'sass-loader': object,
+    'style-loader': object,
+    'url-loader': object,
+  },
   webpack: {
     // original webpack config
   },

@@ -1,6 +1,5 @@
 var path = require('path');
 var chalk = require('chalk');
-var nproxy = require('nproxy');
 var parse = require('url-parse');
 var express = require('express');
 var proxy = require('http-proxy-middleware');
@@ -75,15 +74,6 @@ function runDevServer(config) {
   /*
   if (server.proxy) {
     applyProxyModdileware(devServer, server.proxy);
-  }
-
-  if (server.nproxy) {
-    nproxy(8989, {
-      "responderListFilePath": server.nproxy,
-      "timeout": 5000,
-      "debug": false,
-      "networks": false,
-    });
   }
   */
 

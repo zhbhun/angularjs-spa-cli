@@ -11,10 +11,11 @@ var runDevServer = require('../utils/runDevServer');
 
 var context = fs.realpathSync(process.cwd());
 var config = require(path.resolve(context, argv.config));
-config = configProcess(config);
+var dllConfig = configProcess(config, 'dll');
+var developmentConfig = configProcess(config, 'development');
 
 
-buildDll(config, function () {
-  runDevServer(config);
+buildDll(dllConfig, function () {
+  runDevServer(developmentConfig);
 });
 

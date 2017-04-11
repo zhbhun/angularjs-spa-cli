@@ -14,6 +14,8 @@
     public: string, // 服务路径
   },
   filenames: {
+    prefix: string, // 输出子路径，尾部必须带斜杠
+    dllPrefix: string, // Dll 输出子路径，尾部必须带斜杠，没有配置时使用 prefix
     js: string, // javaScript 文件命名
     css: string, // CSS 文件命名
     media: string, // 媒体文件命名

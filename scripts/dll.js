@@ -13,6 +13,6 @@ var configProcess = require('../utils/configProcess');
 
 var context = fs.realpathSync(process.cwd());
 var config = require(path.resolve(context, argv.config));
-config = configProcess(config);
+var dllConfig = configProcess(config, 'dll');
 
-buildDll(config);
+buildDll(dllConfig);

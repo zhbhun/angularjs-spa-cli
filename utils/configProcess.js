@@ -26,8 +26,9 @@ var names = require('../config/names');
  * @param {string} config.names.media
  * @param {string} config.names.manifest
  * @param {string} config.names.library
+ * @param {string} mode development|production|dll
  */
-function configProcess(config) {
+function configProcess(config, mode) {
   var context = (config && config.context) || paths.context;
   var input = Object.assign({}, paths.input, config && config.input);
   var output = Object.assign({}, paths.output, config && config.output);
@@ -36,7 +37,16 @@ function configProcess(config) {
   var realServer = (server.protocol ? (server.protocol + '://') : '//')
     + server.host
     + (server.port ? (':' + server.port) : '');
-  return Object.assign(config, {
+
+  var filenameFrefix = filenames.prefix;
+  if (mode === 'dll') {
+    if (filenames.dllPrefix === undefined) {
+      filenameFrefix = filenames.prefix;
+    } else {
+      filenameFrefix = filenames.dllPrefix;
+    }
+  }
+  return Object.assign({}, config, {
     context: context,
     input: {
       src: path.resolve(context, input.src),
@@ -51,7 +61,16 @@ function configProcess(config) {
       publicPath: realServer + output.public, // server url + absolute path
     },
     server: server,
-    filenames: filenames,
+    filenames: Object.keys(filenames).reduce(function (fns, key) {
+      if (key != 'prefix' && key != 'dllPrefix') {
+        if (key === 'library') {
+          fns[key] = filenames[key];
+        } else {
+          fns[key] = filenameFrefix + filenames[key];
+        }
+      }
+      return fns;
+    }, {}),
   });
 }
 

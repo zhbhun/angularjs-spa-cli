@@ -16,7 +16,7 @@ var context = fs.realpathSync(process.cwd());
 var config = require(path.resolve(context, argv.config));
 config = configProcess(config);
 
-function buildProduction() {
+function buildProduction(callback) {
   var webpackConfig = WebpackProdConfig(config);
   var webpackCompiler = setupCompiler(webpackConfig);
   console.log();
@@ -37,11 +37,18 @@ function buildProduction() {
       printErrors('Failed to compile.', stats.compilation.warnings);
       process.exit(1);
     }
+
+    callback && callback(webpackConfig);
   });
 }
 
 rimraf(config.output.build, function () {
   buildDll(config, function () {
-    buildProduction();
+    buildProduction(function (webpackConfig) {
+      var listener = config.listener || {};
+      if (typeof listener.afterBuild == 'function') {
+        listener.afterBuild(webpackConfig);
+      }
+    });
   });
 });

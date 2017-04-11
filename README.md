@@ -41,6 +41,9 @@
   webpack: {
     // original webpack config
   },
+  listener: {
+    afterBuild: function, // execute after build
+  },
 }
 ```
 

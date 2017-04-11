@@ -127,6 +127,7 @@ function WebpackConfig(config){
       ],
     },
     plugins: [
+      new webpack.BannerPlugin('build: ' + new Date().toString()),
       new ProgressBarPlugin(),
       new webpack.DefinePlugin(env.stringified),
       new CaseSensitivePathsPlugin(),

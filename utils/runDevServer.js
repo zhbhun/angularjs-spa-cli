@@ -1,4 +1,3 @@
-var path = require('path');
 var chalk = require('chalk');
 var parse = require('url-parse');
 var express = require('express');
@@ -7,20 +6,20 @@ var WebpackDevServer = require('webpack-dev-server');
 
 var WebpackDevConfig = require('../config/webpack.config.dev');
 
-var openBrowser = require('./openBrowser');
+// var openBrowser = require('./openBrowser');
 var clearConsole = require('./clearConsole');
 var setupCompiler = require('./setupCompiler');
-var applyProxyModdileware = require('./applyProxyModdileware');
+// // var applyProxyModdileware = require('./applyProxyModdileware');
 
 var isInteractive = process.stdout.isTTY;
 
-function runDevServer(config) {
+function runDevServer(config, dllConfig) {
   var server = config.server;
   var protocol = server.protocol;
   var host = server.host;
   var port = server.port;
   var publicPath = parse(config.output.publicPath);
-  var webpackConfig = WebpackDevConfig(config);
+  var webpackConfig = WebpackDevConfig(config, dllConfig);
   var compiler = setupCompiler(webpackConfig, {
     host: host,
     port: port,
@@ -77,7 +76,7 @@ function runDevServer(config) {
   }
   */
 
-  devServer.listen(port, function (err, result) {
+  devServer.listen(port, function (err) {
     if (err) {
       console.log(err);
       return;

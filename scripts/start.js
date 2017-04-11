@@ -14,8 +14,7 @@ var config = require(path.resolve(context, argv.config));
 var dllConfig = configProcess(config, 'dll');
 var developmentConfig = configProcess(config, 'development');
 
-
 buildDll(dllConfig, function () {
-  runDevServer(developmentConfig);
+  runDevServer(developmentConfig, dllConfig);
 });
 

@@ -33,7 +33,7 @@ function configProcess(config, mode) {
   var input = Object.assign({}, paths.input, config && config.input);
   var output = Object.assign({}, paths.output, config && config.output);
   var server = Object.assign({}, paths.server, config && config.server);
-  var filenames = Object.assign({}, names[process.env.NODE_ENV], config && config.names);
+  var filenames = Object.assign({}, names[process.env.NODE_ENV], config && config.filenames);
   var realServer = (server.protocol ? (server.protocol + '://') : '//')
     + server.host
     + (server.port ? (':' + server.port) : '');

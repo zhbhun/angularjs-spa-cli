@@ -3,8 +3,8 @@ var WebpackProdConfig = require('../config/webpack.config.prod');
 var setupCompiler = require('./setupCompiler');
 var printErrors = require('./printErrors');
 
-module.exports = function (config, callback) {
-  var webpackConfig = WebpackProdConfig(config);
+module.exports = function (config, dllConfig, callback) {
+  var webpackConfig = WebpackProdConfig(config, dllConfig);
   var webpackCompiler = setupCompiler(webpackConfig);
   console.log();
   console.log('> app building...');

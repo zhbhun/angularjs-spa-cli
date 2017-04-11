@@ -1,4 +1,3 @@
-var fs = require('fs');
 var path = require('path');
 var merge = require('webpack-merge');
 var webpack = require('webpack');
@@ -9,13 +8,13 @@ var AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 
 var WebpackConfig = require('./webpack.config');
 
-function WebpackDevConfig(config) {
+function WebpackDevConfig(config, dllConfig) {
   var publicPath = config.output.publicPath;
   var plugins = [];
   config.chunks.map(function (chunk) {
-    var dll = config.output.dll;
+    var dll = dllConfig.output.dll;
     var assets = require(path.resolve(dll, 'assets.json'));
-    var manifest = config.filenames.manifest.replace('[name]', chunk.name);
+    var manifest = dllConfig.filenames.manifest.replace('[name]', chunk.name);
     var manifestPath = path.resolve(dll, manifest);
     plugins.push(new webpack.DllReferencePlugin({
       context: config.context,

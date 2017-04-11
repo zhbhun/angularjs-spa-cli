@@ -17,7 +17,7 @@ var buildConfig = configProcess(config, 'production');
 
 rimraf(buildConfig.output.build, function () {
   buildDll(dllConfig, function () {
-    buildProduction(buildConfig, function (webpackConfig) {
+    buildProduction(buildConfig, dllConfig, function (webpackConfig) {
       var listener = buildConfig.listener || {};
       if (typeof listener.afterBuild == 'function') {
         listener.afterBuild(webpackConfig);

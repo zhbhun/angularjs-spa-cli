@@ -94,7 +94,12 @@ function WebpackConfig(config){
         {
           test: /\.js$/,
           exclude: /node_modules/,
-          use: 'babel-loader',
+          use: {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+            },
+          },
         },
         {
           test: /\.css$/,

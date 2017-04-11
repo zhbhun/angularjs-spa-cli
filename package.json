@@ -1,6 +1,6 @@
 {
   "name": "angularjs-spa-cli",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Create Angularjs SPA with no build configuration.",
   "author": "zhbhun",
   "repository": "https://github.com/zhbhun/angularjs-spa-cli",
@@ -30,7 +30,7 @@
     "assets-webpack-plugin": "^3.5.1",
     "autoprefixer": "^6.7.6",
     "babel-core": "^6.23.1",
-    "babel-loader": "^6.4.1",
+    "babel-loader": "next",
     "case-sensitive-paths-webpack-plugin": "^1.1.4",
     "chalk": "^1.1.3",
     "connect-history-api-fallback": "^1.3.0",

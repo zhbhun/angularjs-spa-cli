@@ -13,7 +13,7 @@ function WebpackDevConfig(config, dllConfig) {
   var publicUrl = config.output.publicUrl;
   var plugins = [];
   config.chunks.map(function (chunk) {
-    var dll = dllConfig.output.dll;
+    var dll = path.resolve(dllConfig.output.dll, chunk.name);
     var manifest = dllConfig.filenames.manifest.replace('[name]', chunk.name);
     var manifestPath = path.resolve(dll, manifest);
     var js = dllConfig.filenames.js.replace('[name]', chunk.name);

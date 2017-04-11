@@ -1,3 +1,4 @@
+var path = require('path');
 var chalk = require('chalk');
 var parse = require('url-parse');
 var express = require('express');
@@ -61,12 +62,15 @@ function runDevServer(config, dllConfig) {
         return false;
       }, { target: config.output.publicUrl }));
       // server dll assets
-      app.use(publicPath.pathname, express.static(config.output.dll, {
-        setHeaders: function (res) {
-          // fix CORS policy
-          res.header('Access-Control-Allow-Origin', '*');
-        },
-      }));
+      config.chunks.forEach(function (chunk) {
+        var dll = path.resolve(config.output.dll, chunk.name);
+        app.use(publicPath.pathname, express.static(dll, {
+          setHeaders: function (res) {
+            // fix CORS policy
+            res.header('Access-Control-Allow-Origin', '*');
+          },
+        }));
+      });
     },
   }, config.server.original));
 

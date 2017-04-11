@@ -26,7 +26,7 @@
     proxy: string, // 请求转发地址
     original: object, // webpack dev serve config
   },
-  chunks: [{
+  chunks: [{ // false|禁用;undefined / string|默认(使用 package.json 的 dependencies);array
     name: string, // chunk 名称
     dependencies: string[], // chunk 依赖
   }],

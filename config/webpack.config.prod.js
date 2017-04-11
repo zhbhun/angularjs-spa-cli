@@ -12,7 +12,7 @@ function WebpackDevConfig(config, dllConfig) {
   var publicPath = config.output.publicPath;
   var plugins = [];
   config.chunks.map(function (chunk) {
-    var dll = dllConfig.output.dll;
+    var dll = path.resolve(dllConfig.output.dll, chunk.name);
     var assets = require(path.resolve(dll, 'assets.json'));
     var manifest = dllConfig.filenames.manifest.replace('[name]', chunk.name);
     var manifestPath = path.resolve(dll, manifest);
@@ -34,6 +34,14 @@ function WebpackDevConfig(config, dllConfig) {
         typeOfAsset: 'css',
       }));
     }
+    plugins.push(new CopyWebpackPlugin([{
+      from: dll,
+      to: config.output.build,
+      ignore: [
+        '*.json',
+        '*.map',
+      ],
+    }]));
   });
   return merge(WebpackConfig(config), {
     entry: [
@@ -61,14 +69,6 @@ function WebpackDevConfig(config, dllConfig) {
           // minifyURLs: true,
         },
       }),
-      new CopyWebpackPlugin([{
-        from: config.output.dll,
-        to: config.output.build,
-        ignore: [
-          '*.json',
-          '*.map',
-        ],
-      }]),
     ].concat(plugins),
   }, config.webpack || {});
 }

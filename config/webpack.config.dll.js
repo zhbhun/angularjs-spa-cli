@@ -10,13 +10,14 @@ function WebpackDevDllConfig(config, index) {
   var chunks = config.chunks;
   var currentChunk = chunks[index];
   var previousChunks = chunks.slice(0, index);
+  var outputPath = path.resolve(config.output.dll, currentChunk.name);
   return merge(WebpackConfig(config), {
     devtool: 'source-map',
     entry: {
       [currentChunk.name]: currentChunk.dependencies,
     },
     output: {
-      path: config.output.dll,
+      path: outputPath,
       library: config.filenames.library,
     },
     plugins: [
@@ -24,20 +25,20 @@ function WebpackDevDllConfig(config, index) {
       new webpack.DllPlugin({
         context: config.context,
         name: config.filenames.library,
-        path: path.resolve(config.output.dll, config.filenames.manifest),
+        path: path.resolve(outputPath, config.filenames.manifest),
       }),
       new AssetsPlugin({
         filename: 'assets.json', // TODO
         fullPath: false,
         includeManifest: false,
-        path: config.output.dll,
+        path: outputPath,
         prettyPrint: true,
         update: true,
       }),
     ].concat(previousChunks.map(function (chunk) {
       return new webpack.DllReferencePlugin({
         context: config.context,
-        manifest: require(config.output.dll + '/' + config.filenames.manifest.replace('[name]', chunk.name)),
+        manifest: require(outputPath + '/' + config.filenames.manifest.replace('[name]', chunk.name)),
       });
     })),
   }, config.webpack || {});

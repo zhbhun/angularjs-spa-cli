@@ -34,10 +34,12 @@ function configProcess(config, mode) {
   var output = Object.assign({}, paths.output, config && config.output);
   var server = Object.assign({}, paths.server, config && config.server);
   var filenames = Object.assign({}, names[process.env.NODE_ENV], config && config.filenames);
+  var chunks = config.chunks;
+  // server address
   var realServer = (server.protocol ? (server.protocol + '://') : '//')
     + server.host
     + (server.port ? (':' + server.port) : '');
-
+  // filename prefix
   var filenameFrefix = filenames.prefix;
   if (mode === 'dll') {
     if (filenames.dllPrefix === undefined) {
@@ -45,6 +47,15 @@ function configProcess(config, mode) {
     } else {
       filenameFrefix = filenames.dllPrefix;
     }
+  }
+  // resolve default chunks
+  if (chunks === undefined || typeof chunks === 'string') {
+    chunks = [{
+      name: chunks || 'dev',
+      dependencies: Object.keys(require(path.resolve(context, 'package.json')).dependencies),
+    }];
+  } else if (chunks === false || !Array.isArray(chunks)) {
+    chunks = [];
   }
   return Object.assign({}, config, {
     context: context,
@@ -71,6 +82,7 @@ function configProcess(config, mode) {
       }
       return fns;
     }, {}),
+    chunks,
   });
 }
 

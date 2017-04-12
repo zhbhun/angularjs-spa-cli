@@ -13,7 +13,7 @@ function getCurrentVersion(dependencies) {
   var disable = false;
   var result = {};
   dependencies.forEach(function (dependency) {
-    if (dependency.indexOf('/') >= 0 || dependency.indexOf('\\') >= 0) {
+    if (path.isAbsolute(dependency)) {
       disable = true;
     } else {
       result[dependency] = getModuleVersion(dependency);

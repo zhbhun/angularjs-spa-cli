@@ -6,9 +6,10 @@ var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 
 var getClientEnvironment = require('./env');
+var InterpolateHtmlPlugin = require('../utils/InterpolateHtmlPlugin');
 
 function WebpackConfig(config){
-  var env = getClientEnvironment(config.output.publicPath);
+  var env = getClientEnvironment(config.output.publicPath.slice(0, -1));
   var production = env.raw.NODE_ENV === 'production';
   var cssLoaders = [
     {
@@ -124,6 +125,12 @@ function WebpackConfig(config){
       ],
     },
     plugins: [
+      // Makes some environment variables available in index.html.
+      // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
+      // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+      // In production, it will be an empty string unless you specify "homepage"
+      // in `package.json`, in which case it will be the pathname of that URL.
+      new InterpolateHtmlPlugin(env.raw),
       new webpack.BannerPlugin('build: ' + new Date().toString()),
       new ProgressBarPlugin(),
       new webpack.DefinePlugin(env.stringified),

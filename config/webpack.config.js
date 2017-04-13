@@ -48,9 +48,6 @@ function WebpackConfig(config){
       chunkFilename: config.filenames.js,
     },
     resolve: {
-      alias: {
-        '~': config.input.src,
-      },
       extensions: ['.js'],
       modules: [
         path.resolve(config.context, 'node_modules'),

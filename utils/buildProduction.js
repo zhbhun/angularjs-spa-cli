@@ -7,7 +7,7 @@ module.exports = function (config, dllConfig, callback) {
   var webpackConfig = WebpackProdConfig(config, dllConfig);
   var webpackCompiler = setupCompiler(webpackConfig);
   console.log();
-  console.log('> app building...');
+  console.log('> ' + Object.keys(webpackConfig.entry).join(', ') + ' building...');
   console.log();
   webpackCompiler.run((err, stats) => {
     if (err) {
@@ -27,4 +27,4 @@ module.exports = function (config, dllConfig, callback) {
 
     callback && callback(webpackConfig);
   });
-}
+};

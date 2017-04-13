@@ -1,9 +1,9 @@
 var fs = require('fs');
-var path = require('path');
 
 module.exports = {
   context: fs.realpathSync(process.cwd()),
   input: {
+    name: 'main',
     src: 'src',
     script: 'src/index.js',
     html: 'src/index.html',

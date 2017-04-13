@@ -10,52 +10,62 @@ var WebpackConfig = require('./webpack.config');
 
 function WebpackDevConfig(config, dllConfig) {
   var publicPath = config.output.publicPath;
-  var plugins = [];
-  config.chunks.map(function (chunk) {
-    var dll = path.resolve(dllConfig.output.dll, chunk.name);
-    var assets = require(path.resolve(dll, 'assets.json'));
-    var manifest = dllConfig.filenames.manifest.replace('[name]', chunk.name);
-    var manifestPath = path.resolve(dll, manifest);
-    plugins.push(new webpack.DllReferencePlugin({
-      context: config.context,
-      manifest: require(manifestPath),
-    }));
-    plugins.push(new AddAssetHtmlPlugin({
-      filepath: path.resolve(dll, assets[chunk.name].js),
-      includeSourcemap: false,
-      publicPath: publicPath,
-      typeOfAsset: 'js',
-    }));
-    if (assets[chunk.name].css) {
-      plugins.push(new AddAssetHtmlPlugin({
-        filepath: path.resolve(dll, assets[chunk.name].css),
-        includeSourcemap: false,
-        publicPath: publicPath,
-        typeOfAsset: 'css',
-      }));
-    }
-    plugins.push(new CopyWebpackPlugin([{
-      from: dll,
-      to: config.output.build,
-      ignore: [
-        '*.json',
-        '*.map',
-      ],
-    }]));
-  });
   return merge(WebpackConfig(config), {
-    entry: [
-      config.input.script,
-    ],
+    entry: config.input.reduce(function (entry, input) {
+      entry[input.name] = [input.script];
+      return entry;
+    }, {}),
     output: {
       path: config.output.build,
     },
     plugins: [
       new ExtractTextPlugin({ filename: config.filenames.css }),
-      new HtmlWebpackPlugin({
+    ]
+    // chunks
+    .concat((function () {
+      var plugins = [];
+      config.chunks.forEach(function (chunk) {
+        var dll = path.resolve(dllConfig.output.dll, chunk.name);
+        var assets = require(path.resolve(dll, 'assets.json'));
+        var manifest = dllConfig.filenames.manifest.replace('[name]', chunk.name);
+        var manifestPath = path.resolve(dll, manifest);
+        plugins.push(new webpack.DllReferencePlugin({
+          context: config.context,
+          manifest: require(manifestPath),
+        }));
+        plugins.push(new AddAssetHtmlPlugin({
+          filepath: path.resolve(dll, assets[chunk.name].js),
+          includeSourcemap: false,
+          publicPath: publicPath,
+          typeOfAsset: 'js',
+        }));
+        if (assets[chunk.name].css) {
+          plugins.push(new AddAssetHtmlPlugin({
+            filepath: path.resolve(dll, assets[chunk.name].css),
+            includeSourcemap: false,
+            publicPath: publicPath,
+            typeOfAsset: 'css',
+          }));
+        }
+        plugins.push(new CopyWebpackPlugin([{
+          from: dll,
+          to: config.output.build,
+          ignore: [
+            '*.json',
+            '*.map',
+          ],
+        }]));
+      });
+      return plugins;
+    }()))
+    // html
+    .concat(config.input.map(function (input) {
+      var name = input.name;
+      return new HtmlWebpackPlugin({
         inject: true,
         chunksSortMode: 'dependency',
-        template: config.input.html,
+        template: input.html,
+        filename: name + '.html',
         minify: {
           removeComments: true,
           // collapseWhitespace: true,
@@ -68,8 +78,9 @@ function WebpackDevConfig(config, dllConfig) {
           // minifyCSS: true,
           // minifyURLs: true,
         },
-      }),
-    ].concat(plugins),
+        chunks: [name],
+      });
+    })),
   }, config.webpack || {});
 }
 

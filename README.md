@@ -3,19 +3,20 @@
 ```javascript
 {
   context: string, // 根路径
+  // 输入，支持多入口
   input: {
+    name: string, // 入口名称，默认 main
     src: string, // 源码路径
     script: string, // 程序入口
     html: string, // HTML 模板
   },
+  // 输出
   output: {
     dll: string, // 预构建路径
     build: string, // 构建路径 
     public: string, // 服务路径
   },
   filenames: {
-    prefix: string, // 输出子路径，尾部必须带斜杠
-    dllPrefix: string, // Dll 输出子路径，尾部必须带斜杠，没有配置时使用 prefix
     js: string, // javaScript 文件命名
     css: string, // CSS 文件命名
     media: string, // 媒体文件命名
@@ -26,11 +27,15 @@
     proxy: string, // 请求转发地址
     original: object, // webpack dev serve config
   },
-  chunks: [{ // false|禁用;undefined / string|默认(使用 package.json 的 dependencies);array
+   // false: 禁用
+   // undefined / string: 默认使用 package.json 的 dependencies，如果不是字符串则 chunk 名为 dev
+   // array: 自定义
+  chunks: [{
     name: string, // chunk 名称
     dependencies: string[], // chunk 依赖
   }],
-  options: { // TODO advanced config
+  // TODO advanced config
+  options: {
     'eslint-loader': object,
     'css-loader': object,
     'postcss-loader': object,
@@ -40,9 +45,9 @@
     'style-loader': object,
     'url-loader': object,
   },
-  webpack: {
-    // original webpack config
-  },
+  // original webpack config
+  webpack: object,
+  // build listener
   listener: {
     afterBuild: function, // execute after build
   },

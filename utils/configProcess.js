@@ -29,25 +29,25 @@ var names = require('../config/names');
  * @param {string} mode development|production|dll
  */
 function configProcess(config, mode) {
+  // extract config
   var context = (config && config.context) || paths.context;
-  var input = Object.assign({}, paths.input, config && config.input);
+  var input = config && config.input;
   var output = Object.assign({}, paths.output, config && config.output);
   var server = Object.assign({}, paths.server, config && config.server);
   var filenames = Object.assign({}, names[process.env.NODE_ENV], config && config.filenames);
   var chunks = config.chunks;
+  // input transform as array
+  if (!Array.isArray(input)) {
+    input = [Object.assign({}, paths.input, input)];
+  } else {
+    input = input.map(function (item) {
+      return Object.assign({}, paths.input, item);
+    })
+  }
   // server address
   var realServer = (server.protocol ? (server.protocol + '://') : '//')
     + server.host
     + (server.port ? (':' + server.port) : '');
-  // filename prefix
-  var filenameFrefix = filenames.prefix;
-  if (mode === 'dll') {
-    if (filenames.dllPrefix === undefined) {
-      filenameFrefix = filenames.prefix;
-    } else {
-      filenameFrefix = filenames.dllPrefix;
-    }
-  }
   // resolve default chunks
   if (chunks === undefined || typeof chunks === 'string') {
     chunks = [{
@@ -59,11 +59,14 @@ function configProcess(config, mode) {
   }
   return Object.assign({}, config, {
     context: context,
-    input: {
-      src: path.resolve(context, input.src),
-      script: path.resolve(context, input.script),
-      html: path.resolve(context, input.html),
-    },
+    input: input.map(function (i) {
+      return {
+        name: i.name,
+        src: path.resolve(context, i.src),
+        script: path.resolve(context, i.script),
+        html: path.resolve(context, i.html),
+      };
+    }),
     output: {
       dll: path.resolve(context, output.dll),
       build: path.resolve(context, output.build),
@@ -72,16 +75,7 @@ function configProcess(config, mode) {
       publicPath: realServer + output.public, // server url + absolute path
     },
     server: server,
-    filenames: Object.keys(filenames).reduce(function (fns, key) {
-      if (key != 'prefix' && key != 'dllPrefix') {
-        if (key === 'library') {
-          fns[key] = filenames[key];
-        } else {
-          fns[key] = filenameFrefix + filenames[key];
-        }
-      }
-      return fns;
-    }, {}),
+    filenames: filenames,
     chunks,
   });
 }

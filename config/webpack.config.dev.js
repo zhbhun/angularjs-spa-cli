@@ -11,39 +11,16 @@ var WebpackConfig = require('./webpack.config');
 function WebpackDevConfig(config, dllConfig) {
   var publicPath = config.output.publicPath;
   var publicUrl = config.output.publicUrl;
-  var plugins = [];
-  config.chunks.map(function (chunk) {
-    var dll = path.resolve(dllConfig.output.dll, chunk.name);
-    var manifest = dllConfig.filenames.manifest.replace('[name]', chunk.name);
-    var manifestPath = path.resolve(dll, manifest);
-    var js = dllConfig.filenames.js.replace('[name]', chunk.name);
-    var jsPath = path.resolve(dll, js);
-    var css = dllConfig.filenames.css.replace('[name]', chunk.name);
-    var cssPath = path.resolve(dll, css);
-    plugins.push(new webpack.DllReferencePlugin({
-      context: config.context,
-      manifest: require(manifestPath),
-    }));
-    var assets = [];
-    if (fs.existsSync(jsPath)) {
-      assets.push(js);
-    }
-    if (fs.existsSync(cssPath)) {
-      assets.push(css);
-    }
-    plugins.push(new HtmlWebpackIncludeAssetsPlugin({
-      assets: assets,
-      append: false,
-      publicPath: publicPath,
-    }));
-  });
   return merge(WebpackConfig(config), {
     devtool: 'source-map',
-    entry: [
-      'webpack-dev-server/client?' + publicUrl,
-      'webpack/hot/dev-server',
-      config.input.script,
-    ],
+    entry: config.input.reduce(function (entry, input) {
+      entry[input.name] = [
+        'webpack-dev-server/client?' + publicUrl,
+        'webpack/hot/dev-server',
+        input.script,
+      ];
+      return entry;
+    }, {}),
     output: {
       path: __dirname,
     },
@@ -52,12 +29,48 @@ function WebpackDevConfig(config, dllConfig) {
       new ExtractTextPlugin({
         disable: true,
       }),
-      new HtmlWebpackPlugin({
+    ]
+    // chunks
+    .concat((function () {
+      var plugins = [];
+      config.chunks.forEach(function (chunk) {
+        var dll = path.resolve(dllConfig.output.dll, chunk.name);
+        var manifest = dllConfig.filenames.manifest.replace('[name]', chunk.name);
+        var manifestPath = path.resolve(dll, manifest);
+        var js = dllConfig.filenames.js.replace('[name]', chunk.name);
+        var jsPath = path.resolve(dll, js);
+        var css = dllConfig.filenames.css.replace('[name]', chunk.name);
+        var cssPath = path.resolve(dll, css);
+        plugins.push(new webpack.DllReferencePlugin({
+          context: config.context,
+          manifest: require(manifestPath),
+        }));
+        var assets = [];
+        if (fs.existsSync(jsPath)) {
+          assets.push(js);
+        }
+        if (fs.existsSync(cssPath)) {
+          assets.push(css);
+        }
+        plugins.push(new HtmlWebpackIncludeAssetsPlugin({
+          assets: assets,
+          append: false,
+          publicPath: publicPath,
+        }));
+      });
+      return plugins;
+    }()))
+    // html
+    .concat(config.input.map(function (input) {
+      var name = input.name;
+      return new HtmlWebpackPlugin({
         inject: true,
         chunksSortMode: 'dependency',
-        template: config.input.html,
-      }),
-    ].concat(plugins),
+        template: input.html,
+        filename: name + '.html',
+        chunks: [name],
+      });
+    })),
   }, config.webpack || {});
 }
 

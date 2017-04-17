@@ -61,11 +61,12 @@ function WebpackDevConfig(config, dllConfig) {
     // html
     .concat(config.input.map(function (input) {
       var name = input.name;
+      var filename = config.filenames.html.replace('[name]', name);
       return new HtmlWebpackPlugin({
         inject: true,
         chunksSortMode: 'dependency',
         template: input.html,
-        filename: name + '.html',
+        filename: filename,
         minify: {
           removeComments: true,
           // collapseWhitespace: true,

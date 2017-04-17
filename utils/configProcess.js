@@ -33,8 +33,14 @@ function configProcess(config, mode) {
   var context = (config && config.context) || paths.context;
   var input = config && config.input;
   var output = Object.assign({}, paths.output, config && config.output);
-  var server = Object.assign({}, paths.server, config && config.server);
-  var filenames = Object.assign({}, names[process.env.NODE_ENV], config && config.filenames);
+  var server;
+  if (config && config.server === false) {
+    server = false;
+  } else {
+    server = Object.assign({}, paths.server, config && config.server);
+  }
+  var defaultFilenames = names[process.env.NODE_ENV];
+  var filenames = Object.assign({}, defaultFilenames, config && config.filenames);
   var chunks = config.chunks;
   // input transform as array
   if (!Array.isArray(input)) {
@@ -42,12 +48,15 @@ function configProcess(config, mode) {
   } else {
     input = input.map(function (item) {
       return Object.assign({}, paths.input, item);
-    })
+    });
   }
   // server address
-  var realServer = (server.protocol ? (server.protocol + '://') : '//')
+  var realServer = '';
+  if (server) {
+    realServer = (server.protocol ? (server.protocol + '://') : '//')
     + server.host
     + (server.port ? (':' + server.port) : '');
+  }
   // resolve default chunks
   if (chunks === undefined || typeof chunks === 'string') {
     chunks = [{
@@ -75,7 +84,10 @@ function configProcess(config, mode) {
       publicPath: realServer + output.public, // server url + absolute path
     },
     server: server,
-    filenames: filenames,
+    filenames: Object.keys(filenames).reduce(function (names, key) {
+      names[key] = filenames[key].replace('[default]', defaultFilenames[key]);
+      return names;
+    }, {}),
     chunks,
   });
 }

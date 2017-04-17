@@ -10,22 +10,18 @@ var WebpackConfig = require('./webpack.config');
 
 function WebpackDevConfig(config, dllConfig) {
   var publicPath = config.output.publicPath;
-  var publicUrl = config.output.publicUrl;
   return merge(WebpackConfig(config), {
     devtool: 'source-map',
     entry: config.input.reduce(function (entry, input) {
       entry[input.name] = [
-        'webpack-dev-server/client?' + publicUrl,
-        'webpack/hot/dev-server',
         input.script,
       ];
       return entry;
     }, {}),
     output: {
-      path: __dirname,
+      path: config.output.build,
     },
     plugins: [
-      new webpack.HotModuleReplacementPlugin(),
       new ExtractTextPlugin({
         disable: true,
       }),

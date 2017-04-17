@@ -4,6 +4,7 @@ exports.development = {
   media: '[name].[hash:8].[ext]',
   manifest: '[name].manifest.json',
   library: '[name]_library',
+  html: '[name].html',
 };
 
 exports.production = {
@@ -12,4 +13,5 @@ exports.production = {
   media: '[name].[hash:8].[ext]',
   manifest: '[name].manifest.json',
   library: '[name]_library',
+  html: '[name].html',
 };

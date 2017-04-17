@@ -8,6 +8,7 @@ switch (script) {
   case 'build':
   case 'dll':
   case 'start':
+  case 'watch':
   case 'webpack':
     var result = spawn.sync(
       'node',

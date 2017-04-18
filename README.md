@@ -24,9 +24,9 @@
   server: {
     host: string, // 服务器地址
     port: string, // 服务器端口
-    proxy: string, // 请求转发地址
     original: object, // webpack dev serve config
   },
+  proxy: object, // 代理，参考 [http-proxy-middleware](https://github.com/chimurai/http-proxy-middleware)
    // false: 禁用
    // undefined / string: 默认使用 package.json 的 dependencies，如果不是字符串则 chunk 名为 dev
    // array: 自定义
@@ -58,4 +58,5 @@
 - `ng dll --config [development.js]`
 - `ng start --config [development.js]`
 - `ng build --config [production.js]`
+- `ng watch --config [development.js]`
 - `ng webpack --config [webpacj.config.js]`

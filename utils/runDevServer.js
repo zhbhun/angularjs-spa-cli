@@ -10,7 +10,7 @@ var WebpackDevConfig = require('../config/webpack.config.dev');
 // var openBrowser = require('./openBrowser');
 var clearConsole = require('./clearConsole');
 var setupCompiler = require('./setupCompiler');
-// // var applyProxyModdileware = require('./applyProxyModdileware');
+var applyProxyModdileware = require('./applyProxyModdileware');
 
 var isInteractive = process.stdout.isTTY;
 
@@ -74,11 +74,7 @@ function runDevServer(config, dllConfig) {
     },
   }, config.server.original));
 
-  /*
-  if (server.proxy) {
-    applyProxyModdileware(devServer, server.proxy);
-  }
-  */
+  applyProxyModdileware(devServer, config);
 
   devServer.listen(port, function (err) {
     if (err) {

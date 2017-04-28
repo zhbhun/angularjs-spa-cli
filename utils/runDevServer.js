@@ -27,6 +27,7 @@ function runDevServer(config, dllConfig) {
     protocol: protocol,
   });
   var devServer = new WebpackDevServer(compiler, Object.assign({
+    disableHostCheck: true,
     contentBase: [
       config.context,
     ],

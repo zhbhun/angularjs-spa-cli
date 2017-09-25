@@ -56,6 +56,7 @@ function WebpackDevConfig(config, dllConfig) {
           assets: assets,
           append: false,
           publicPath: publicPath,
+          hash: true,
         }));
       });
       return plugins;
@@ -70,6 +71,7 @@ function WebpackDevConfig(config, dllConfig) {
         template: input.html,
         filename: filename,
         chunks: [name],
+        hash: true,
       });
     })),
   }, config.webpack || {});

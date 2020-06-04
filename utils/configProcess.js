@@ -89,6 +89,7 @@ function configProcess(config, mode) {
       return names;
     }, {}),
     chunks,
+    options: config.options,
   });
 }
 

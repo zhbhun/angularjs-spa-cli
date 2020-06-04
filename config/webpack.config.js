@@ -84,10 +84,13 @@ function WebpackConfig(config){
           test: /\.html$/,
           use: [{
             loader: 'html-loader',
-            options: {
-              ignoreCustomFragments: [/\{\{.*?}}/],
-              attrs: ['img:src', 'link:href'],
-            },
+            options: Object.assign(
+              {
+                ignoreCustomFragments: [/\{\{.*?}}/],
+                attrs: ['img:src', 'link:href'],
+              },
+              (config && config.options && config.options['html-loader'] || {})
+            ),
           }],
         },
         {

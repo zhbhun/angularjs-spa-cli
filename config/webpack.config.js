@@ -40,6 +40,20 @@ function WebpackConfig(config){
     }
   ];
   var sassLoaders = cssLoaders.concat('sass-loader');
+  var cssModuleLoaders = [...cssLoaders];
+  cssModuleLoaders[0] = Object.assign({}, cssModuleLoaders[0], {
+    options: Object.assign({}, cssModuleLoaders[0].options, {
+      localIdentName: production ? '[hash:base64]' : '[local]--[hash:base64:5]',
+      modules: true,
+    })
+  });
+  var sassModuleLoaders = [...sassLoaders];
+  sassModuleLoaders[0] = Object.assign({}, sassModuleLoaders[0], {
+    options: Object.assign({}, sassModuleLoaders[0].options, {
+      localIdentName: production ? '[hash:base64]' : '[local]--[hash:base64:5]',
+      modules: true,
+    })
+  });
   return {
     cache: true,
     output: {
@@ -105,16 +119,32 @@ function WebpackConfig(config){
         },
         {
           test: /\.css$/,
+          exclude: /\.module\.css$/,
           use: ExtractTextPlugin.extract({
             fallback: 'style-loader',
             use: cssLoaders,
           }),
         },
         {
+          test: /\.module\.css$$/,
+          use: ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            use: cssModuleLoaders,
+          }),
+        },
+        {
           test: /\.scss$/,
+          exclude: /\.module\.scss$/,
           use: ExtractTextPlugin.extract({
             fallback: 'style-loader',
             use: sassLoaders,
+          }),
+        },
+        {
+          test: /\.module\.scss$/,
+          use: ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            use: sassModuleLoaders,
           }),
         },
         {
